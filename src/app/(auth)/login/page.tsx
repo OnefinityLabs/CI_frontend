@@ -24,8 +24,8 @@ function ParticleBackground() {
     const COUNT = 55
 
     function resize() {
-      W = canvas.width  = window.innerWidth
-      H = canvas.height = window.innerHeight
+      W = canvas!.width  = window.innerWidth
+      H = canvas!.height = window.innerHeight
     }
 
     function init() {
