@@ -377,8 +377,8 @@ export default function AgentDashboardPage() {
   const [isAdmin,     setIsAdmin]     = useState(false)
   const [dayFilter,   setDayFilter]   = useState<string|null>(null)
 
-  const BACKEND_URL = 'https://agentdashboard-production-5777.up.railway.app'
-  const API_SECRET  = '9a386d5511ebaf9086545ad5ffb20da4664a271ab909e106a67b96fc3d18887e'
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!
+  const API_SECRET  = process.env.NEXT_PUBLIC_API_SECRET!
 
   // ── Load agent info ─────────────────────────────────────────
   const { data: agent } = useQuery<Agent>({
