@@ -43,7 +43,7 @@ function ParticleBackground() {
     }
 
     function draw() {
-      ctx.clearRect(0, 0, W, H)
+      ctx!.clearRect(0, 0, W, H)
 
       // Move particles
       for (const p of particles) {
