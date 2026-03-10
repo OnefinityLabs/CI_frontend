@@ -19,12 +19,12 @@ function fmtDate(ts: string) {
 
 // Maps your AgentColor to a visible accent on dark backgrounds
 const ACCENT: Record<AgentColor, string> = {
-  peach: '#ff8c6b',
-  lav:   '#9b7ff4',
-  mint:  '#34c98e',
-  sky:   '#4aaff7',
-  rose:  '#f76b8a',
-  amber: '#f5a623',
+  peach: '#4B6CF7',
+  lav:   '#818cf8',
+  mint:  '#2dd4a0',
+  sky:   '#4B6CF7',
+  rose:  '#f43f72',
+  amber: '#fb923c',
 }
 
 // ── Stat pill ────────────────────────────────────────────────
@@ -55,7 +55,7 @@ function AgentStatPill({ agentDbId }: { agentDbId: string }) {
 
   return (
     <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-      <span style={{ ...pillStyle, background: 'rgba(74,175,247,0.1)', color: '#4AAFF7', border: '1px solid rgba(74,175,247,0.2)' }}>
+      <span style={{ ...pillStyle, background: 'rgba(75,108,247,0.1)', color: '#4B6CF7', border: '1px solid rgba(75,108,247,0.2)' }}>
         💬 {data?.totalCached ?? 0} cached
       </span>
       <span style={pillStyle}>
@@ -137,24 +137,24 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
           border: 1px solid rgba(255,255,255,0.1);
           background: rgba(255,255,255,0.05);
           font-size: 14px; color: rgba(255,255,255,0.9);
-          outline: none; font-family: var(--font-nunito), sans-serif;
+          outline: none; font-family: var(--font-inter), sans-serif;
           transition: border-color 0.15s, box-shadow 0.15s;
           box-sizing: border-box;
         }
-        .m-input:focus { border-color: #4AAFF7; box-shadow: 0 0 0 3px rgba(74,175,247,0.12); }
+        .m-input:focus { border-color: #4B6CF7; box-shadow: 0 0 0 3px rgba(75,108,247,0.12); }
         .m-input::placeholder { color: rgba(255,255,255,0.2); }
         .m-label {
           display: block; font-size: 11px; font-weight: 700;
           color: rgba(255,255,255,0.4); margin-bottom: 7px;
           text-transform: uppercase; letter-spacing: 0.08em;
-          font-family: var(--font-nunito), sans-serif;
+          font-family: var(--font-inter), sans-serif;
         }
       `}</style>
 
       {/* Backdrop */}
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
         <div onClick={e => e.stopPropagation()} style={{
-          background: '#0d2137',
+          background: '#0f1524',
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: '18px',
           padding: '32px 28px',
@@ -196,8 +196,8 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
               {(['icon', 'image'] as const).map(t => (
                 <button key={t} onClick={() => setAvatarTab(t)} style={{
                   flex: 1, padding: '9px 0', border: 'none', cursor: 'pointer',
-                  fontSize: '12px', fontWeight: '700', fontFamily: 'var(--font-nunito), sans-serif',
-                  background: avatarTab === t ? '#4AAFF7' : 'transparent',
+                  fontSize: '12px', fontWeight: '700', fontFamily: 'var(--font-inter), sans-serif',
+                  background: avatarTab === t ? '#4B6CF7' : 'transparent',
                   color: avatarTab === t ? '#fff' : 'rgba(255,255,255,0.4)',
                   transition: 'all 0.15s',
                 }}>
@@ -211,8 +211,8 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
                 {EMOJIS.map(e => (
                   <button key={e} onClick={() => setEmoji(e)} style={{
                     width: '42px', height: '42px', borderRadius: '9px', cursor: 'pointer',
-                    border: `2px solid ${emoji === e ? '#4AAFF7' : 'rgba(255,255,255,0.1)'}`,
-                    background: emoji === e ? 'rgba(74,175,247,0.15)' : 'rgba(255,255,255,0.04)',
+                    border: `2px solid ${emoji === e ? '#4B6CF7' : 'rgba(255,255,255,0.1)'}`,
+                    background: emoji === e ? 'rgba(75,108,247,0.15)' : 'rgba(255,255,255,0.04)',
                     fontSize: '18px', transition: 'all 0.12s',
                   }}>{e}</button>
                 ))}
@@ -236,7 +236,7 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
                     <div>
                       <div style={{ fontSize: '28px', marginBottom: '6px', opacity: 0.3 }}>📸</div>
                       <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)', fontWeight: '600' }}>
-                        Drop an image or <span style={{ color: '#4AAFF7' }}>browse</span>
+                        Drop an image or <span style={{ color: '#4B6CF7' }}>browse</span>
                       </div>
                       <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginTop: '3px' }}>PNG, JPG, WEBP · max 2 MB</div>
                     </div>
@@ -245,9 +245,9 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
                 {imagePreview && (
                   <button onClick={() => { setImageFile(null); setImagePreview('') }} style={{
                     marginTop: '8px', padding: '4px 12px', borderRadius: '50px',
-                    background: 'rgba(247,107,138,0.12)', color: '#f9a8bb',
-                    border: '1px solid rgba(247,107,138,0.2)',
-                    fontSize: '11px', fontWeight: '700', cursor: 'pointer', fontFamily: 'var(--font-nunito), sans-serif',
+                    background: 'rgba(244,63,114,0.12)', color: '#fda4af',
+                    border: '1px solid rgba(244,63,114,0.2)',
+                    fontSize: '11px', fontWeight: '700', cursor: 'pointer', fontFamily: 'var(--font-inter), sans-serif',
                   }}>✕ Remove image</button>
                 )}
               </div>
@@ -272,7 +272,7 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
           </div>
 
           {error && (
-            <div style={{ marginBottom: '16px', padding: '10px 13px', background: 'rgba(247,107,138,0.1)', border: '1px solid rgba(247,107,138,0.2)', borderRadius: '8px', fontSize: '13px', color: '#f9a8bb' }}>
+            <div style={{ marginBottom: '16px', padding: '10px 13px', background: 'rgba(244,63,114,0.1)', border: '1px solid rgba(244,63,114,0.2)', borderRadius: '8px', fontSize: '13px', color: '#fda4af' }}>
               ⚠ {error}
             </div>
           )}
@@ -283,13 +283,13 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
               flex: 1, padding: '12px', borderRadius: '9px', cursor: 'pointer',
               border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)',
               fontSize: '14px', fontWeight: '700', color: 'rgba(255,255,255,0.6)',
-              fontFamily: 'var(--font-nunito), sans-serif',
+              fontFamily: 'var(--font-inter), sans-serif',
             }}>Cancel</button>
             <button onClick={handleSave} disabled={saving} style={{
               flex: 2, padding: '12px', borderRadius: '9px', border: 'none', cursor: saving ? 'not-allowed' : 'pointer',
-              background: saving ? 'rgba(74,175,247,0.4)' : '#4AAFF7',
+              background: saving ? 'rgba(75,108,247,0.4)' : '#4B6CF7',
               color: '#fff', fontSize: '14px', fontWeight: '700',
-              fontFamily: 'var(--font-nunito), sans-serif',
+              fontFamily: 'var(--font-inter), sans-serif',
               transition: 'background 0.15s',
             }}>
               {saving ? 'Saving…' : (editAgent ? 'Save Changes' : 'Add Agent ✨')}
@@ -357,7 +357,7 @@ export default function AgentsPage() {
   )
 
   if (error) return (
-    <div style={{ textAlign: 'center', padding: '60px', color: '#f9a8bb', fontSize: '14px' }}>
+    <div style={{ textAlign: 'center', padding: '60px', color: '#fda4af', fontSize: '14px' }}>
       Failed to load agents. Please refresh.
     </div>
   )
@@ -372,14 +372,14 @@ export default function AgentsPage() {
         .agent-card { transition: transform 0.18s, box-shadow 0.18s; }
         .agent-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.35) !important; }
         .agent-card:hover .open-btn { opacity: 1 !important; }
-        .add-card:hover { border-color: #4AAFF7 !important; background: rgba(74,175,247,0.06) !important; }
+        .add-card:hover { border-color: #4B6CF7 !important; background: rgba(75,108,247,0.06) !important; }
       `}</style>
 
       {/* Section header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '28px' }}>
         <div>
           <h1 style={{ fontSize: '24px', fontWeight: '800', color: '#fff', letterSpacing: '-0.5px', marginBottom: '5px' }}>
-            Your <span style={{ color: '#4AAFF7' }}>Agents</span>
+            Your <span style={{ color: '#4B6CF7' }}>Agents</span>
           </h1>
           <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.38)', fontWeight: '500' }}>
             {isAdmin
@@ -388,8 +388,8 @@ export default function AgentsPage() {
           </p>
         </div>
         <div style={{
-          fontSize: '12px', fontWeight: '700', color: '#4AAFF7',
-          background: 'rgba(74,175,247,0.1)', border: '1px solid rgba(74,175,247,0.2)',
+          fontSize: '12px', fontWeight: '700', color: '#4B6CF7',
+          background: 'rgba(75,108,247,0.1)', border: '1px solid rgba(75,108,247,0.2)',
           borderRadius: '50px', padding: '5px 16px',
         }}>
           {agents.length} agent{agents.length !== 1 ? 's' : ''}
@@ -399,10 +399,10 @@ export default function AgentsPage() {
       {/* Client notice */}
       {!isAdmin && (
         <div style={{
-          background: 'rgba(74,175,247,0.08)', border: '1px solid rgba(74,175,247,0.18)',
+          background: 'rgba(75,108,247,0.08)', border: '1px solid rgba(75,108,247,0.18)',
           borderRadius: '12px', padding: '12px 18px', marginBottom: '24px',
           display: 'flex', alignItems: 'center', gap: '10px',
-          fontSize: '13px', fontWeight: '600', color: '#4AAFF7',
+          fontSize: '13px', fontWeight: '600', color: '#4B6CF7',
         }}>
           ℹ️ You're viewing as a <strong>Client</strong>. Contact your admin to get access to more agents.
         </div>
@@ -434,7 +434,7 @@ export default function AgentsPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
                 <div style={{
                   width: '56px', height: '56px', borderRadius: '14px',
-                  background: ag.image_url ? 'transparent' : `rgba(${accent === '#4aaff7' ? '74,175,247' : '155,127,244'},0.15)`,
+                  background: ag.image_url ? 'transparent' : `rgba(${accent === '#4B6CF7' ? '75,108,247' : '129,140,248'},0.15)`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: '26px', overflow: 'hidden', flexShrink: 0,
                   border: `1px solid rgba(255,255,255,0.08)`,
@@ -458,13 +458,13 @@ export default function AgentsPage() {
                     {menuOpen === ag.id && (
                       <div style={{
                         position: 'absolute', right: 0, top: '36px',
-                        background: '#0d2137', border: '1px solid rgba(255,255,255,0.1)',
+                        background: '#0f1524', border: '1px solid rgba(255,255,255,0.1)',
                         borderRadius: '10px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                         zIndex: 50, minWidth: '140px', overflow: 'hidden',
                       }}>
                         {[
                           { label: '✏️ Edit', action: () => { setEditAgent(ag); setModalOpen(true); setMenuOpen(null) }, color: 'rgba(255,255,255,0.8)' },
-                          { label: '🗑 Remove', action: () => { handleRemove(ag.id); setMenuOpen(null) }, color: '#f9a8bb' },
+                          { label: '🗑 Remove', action: () => { handleRemove(ag.id); setMenuOpen(null) }, color: '#fda4af' },
                         ].map(item => (
                           <button key={item.label}
                             onClick={e => { e.stopPropagation(); item.action() }}
@@ -472,7 +472,7 @@ export default function AgentsPage() {
                               width: '100%', padding: '10px 14px', border: 'none',
                               background: 'transparent', textAlign: 'left',
                               fontSize: '13px', fontWeight: '600', cursor: 'pointer',
-                              color: item.color, fontFamily: 'var(--font-nunito), sans-serif',
+                              color: item.color, fontFamily: 'var(--font-inter), sans-serif',
                               transition: 'background 0.12s',
                             }}
                             onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
@@ -512,7 +512,7 @@ export default function AgentsPage() {
                     background: 'rgba(255,255,255,0.06)',
                     color: 'rgba(255,255,255,0.7)', fontSize: '12px',
                     fontWeight: '700', cursor: 'pointer',
-                    fontFamily: 'var(--font-nunito), sans-serif',
+                    fontFamily: 'var(--font-inter), sans-serif',
                     opacity: 0.7, transition: 'opacity 0.15s, background 0.15s',
                   }}
                   onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = '#fff' }}
@@ -541,9 +541,9 @@ export default function AgentsPage() {
           >
             <div style={{
               width: '48px', height: '48px', borderRadius: '50%',
-              background: 'rgba(74,175,247,0.1)', border: '1px solid rgba(74,175,247,0.25)',
+              background: 'rgba(75,108,247,0.1)', border: '1px solid rgba(75,108,247,0.25)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '22px', color: '#4AAFF7',
+              fontSize: '22px', color: '#4B6CF7',
             }}>+</div>
             <div style={{ fontSize: '15px', fontWeight: '800', color: 'rgba(255,255,255,0.8)', textAlign: 'center' }}>
               Add New Agent

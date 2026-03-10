@@ -48,7 +48,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           font-size: 13px;
           font-weight: 700;
           cursor: pointer;
-          font-family: var(--font-nunito), sans-serif;
+          font-family: var(--font-inter), sans-serif;
           transition: all 0.15s;
           white-space: nowrap;
         }
@@ -56,8 +56,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #091c2e 0%, #0d2137 50%, #091c2e 100%)',
-        fontFamily: 'var(--font-nunito), sans-serif',
+        background: '#0a0e1a',
+        fontFamily: 'var(--font-inter), sans-serif',
       }}>
 
         {/* ── Topbar ── */}
@@ -125,7 +125,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               }}>
                 <div style={{
                   width: '26px', height: '26px', borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #4AAFF7, #1A6FBF)',
+                  background: 'linear-gradient(135deg, #4B6CF7, #3451c7)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: '10px', fontWeight: '800', color: '#fff', flexShrink: 0,
                 }}>
@@ -137,9 +137,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <span style={{
                   fontSize: '10px', fontWeight: '700',
                   padding: '2px 8px', borderRadius: '50px',
-                  background: isAdmin ? 'rgba(74,175,247,0.15)' : 'rgba(255,255,255,0.08)',
-                  color: isAdmin ? '#4AAFF7' : 'rgba(255,255,255,0.5)',
-                  border: `1px solid ${isAdmin ? 'rgba(74,175,247,0.3)' : 'rgba(255,255,255,0.12)'}`,
+                  background: isAdmin ? 'rgba(75,108,247,0.15)' : 'rgba(255,255,255,0.08)',
+                  color: isAdmin ? '#4B6CF7' : 'rgba(255,255,255,0.5)',
+                  border: `1px solid ${isAdmin ? 'rgba(75,108,247,0.3)' : 'rgba(255,255,255,0.12)'}`,
                 }}>
                   {isAdmin ? '🛡 Admin' : '👤 Client'}
                 </span>
@@ -151,12 +151,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               className="topbar-btn"
               onClick={handleSignOut}
               style={{
-                background: 'rgba(247,107,138,0.1)',
-                color: '#f9a8bb',
-                border: '1px solid rgba(247,107,138,0.2)',
+                background: 'rgba(244,63,114,0.1)',
+                color: '#fda4af',
+                border: '1px solid rgba(244,63,114,0.2)',
               }}
-              onMouseOver={e => { e.currentTarget.style.background = '#f76b8a'; e.currentTarget.style.color = '#fff' }}
-              onMouseOut={e => { e.currentTarget.style.background = 'rgba(247,107,138,0.1)'; e.currentTarget.style.color = '#f9a8bb' }}
+              onMouseOver={e => { e.currentTarget.style.background = '#f43f72'; e.currentTarget.style.color = '#fff' }}
+              onMouseOut={e => { e.currentTarget.style.background = 'rgba(244,63,114,0.1)'; e.currentTarget.style.color = '#fda4af' }}
             >
               Sign Out
             </button>

@@ -23,7 +23,7 @@ const fmtTime = (u: number | null) => u ? new Date(u*1000).toLocaleTimeString('e
 const fmtDate = (u: number | null) => u ? new Date(u*1000).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '—'
 const daySort = (u: number | null) => u ? new Date(u*1000).toISOString().slice(0,10) : '0000-00-00'
 const initials = (n: string) => { if (!n || n==='Unknown User') return '?'; const p=n.trim().split(' '); return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():n.slice(0,2).toUpperCase() }
-const stColor  = (s: string) => ({ done:'#34c98e', failed:'#f76b8a', processing:'#f5a623' }[s] || '#4aaff7')
+const stColor  = (s: string) => ({ done:'#2dd4a0', failed:'#f43f72', processing:'#fb923c' }[s] || '#4B6CF7')
 
 function dayLabel(u: number | null) {
   if (!u) return 'Unknown Date'
@@ -94,9 +94,9 @@ function buildUserMap(convs: Conversation[]) {
 }
 
 function syncLabel(lastSyncedAt: string | null) {
-  if (!lastSyncedAt) return { text: 'Never synced', color: '#f76b8a' }
+  if (!lastSyncedAt) return { text: 'Never synced', color: '#f43f72' }
   const mins = Math.floor((Date.now() - new Date(lastSyncedAt).getTime()) / 60000)
-  const color = mins > 60 ? '#f5a623' : '#34c98e'
+  const color = mins > 60 ? '#fb923c' : '#2dd4a0'
   const text = mins < 1 ? 'Synced just now' : mins < 60 ? `Synced ${mins}m ago` : `Synced ${Math.floor(mins/60)}h ago`
   return { text, color }
 }
@@ -164,21 +164,21 @@ function CallsChart({ convs, range, onRangeChange }: { convs: Conversation[]; ra
     // Avg Duration fill+line (peach)
     ctx.beginPath()
     avgDurs.forEach((v,i)=>{ const x=PAD.left+i*xStep, y=PAD.top+cH*(1-v/maxD); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y) })
-    ctx.strokeStyle='#ff8c6b'; ctx.lineWidth=2; ctx.setLineDash([5,4]); ctx.stroke(); ctx.setLineDash([])
+    ctx.strokeStyle='#4B6CF7'; ctx.lineWidth=2; ctx.setLineDash([5,4]); ctx.stroke(); ctx.setLineDash([])
     ctx.lineTo(PAD.left+(keys.length-1)*xStep,PAD.top+cH); ctx.lineTo(PAD.left,PAD.top+cH); ctx.closePath()
-    ctx.fillStyle='rgba(255,140,107,0.06)'; ctx.fill()
+    ctx.fillStyle='rgba(75,108,247,0.06)'; ctx.fill()
 
     // Sessions fill+line (lav)
     ctx.beginPath()
     counts.forEach((v,i)=>{ const x=PAD.left+i*xStep, y=PAD.top+cH*(1-v/maxN); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y) })
-    ctx.strokeStyle='#9b7ff4'; ctx.lineWidth=2.5; ctx.stroke()
+    ctx.strokeStyle='#818cf8'; ctx.lineWidth=2.5; ctx.stroke()
     ctx.lineTo(PAD.left+(keys.length-1)*xStep,PAD.top+cH); ctx.lineTo(PAD.left,PAD.top+cH); ctx.closePath()
-    ctx.fillStyle='rgba(155,127,244,0.1)'; ctx.fill()
+    ctx.fillStyle='rgba(129,140,248,0.1)'; ctx.fill()
 
     // Points
     counts.forEach((v,i)=>{
       const x=PAD.left+i*xStep, y=PAD.top+cH*(1-v/maxN)
-      ctx.beginPath(); ctx.arc(x,y,3.5,0,Math.PI*2); ctx.fillStyle='#9b7ff4'; ctx.fill()
+      ctx.beginPath(); ctx.arc(x,y,3.5,0,Math.PI*2); ctx.fillStyle='#818cf8'; ctx.fill()
     })
 
     // X labels (show max 7)
@@ -187,11 +187,11 @@ function CallsChart({ convs, range, onRangeChange }: { convs: Conversation[]; ra
     labels.forEach((l,i)=>{ if(i%step===0){ const x=PAD.left+i*xStep; ctx.fillText(l,x,H-6) } })
 
     // Y labels left (sessions)
-    ctx.fillStyle='rgba(155,127,244,0.7)'; ctx.font='600 10px Nunito,sans-serif'; ctx.textAlign='right'
+    ctx.fillStyle='rgba(129,140,248,0.7)'; ctx.font='600 10px Nunito,sans-serif'; ctx.textAlign='right'
     for (let i=0;i<=4;i++) { const v=Math.round(maxN*i/4); ctx.fillText(String(v),PAD.left-5,PAD.top+cH*(1-i/4)+4) }
 
     // Y labels right (duration)
-    ctx.fillStyle='rgba(255,140,107,0.7)'; ctx.textAlign='left'
+    ctx.fillStyle='rgba(75,108,247,0.7)'; ctx.textAlign='left'
     for (let i=0;i<=4;i++) { const v=Math.round(maxD*i/4); ctx.fillText(v+'s',W-PAD.right+5,PAD.top+cH*(1-i/4)+4) }
 
   }, [convs, range, customFrom, customTo])
@@ -207,18 +207,18 @@ function CallsChart({ convs, range, onRangeChange }: { convs: Conversation[]; ra
         </div>
         <div style={{ display:'flex', flexDirection:'column', gap:'8px', alignItems:'flex-end' }}>
           <div style={{ display:'flex', gap:'10px' }}>
-            <span style={{ display:'flex', alignItems:'center', gap:'5px', fontSize:'11px', color:'rgba(155,127,244,0.8)', fontWeight:'600' }}><span style={{ width:'10px',height:'2px',background:'#9b7ff4',display:'inline-block',borderRadius:'2px' }}/>Sessions</span>
-            <span style={{ display:'flex', alignItems:'center', gap:'5px', fontSize:'11px', color:'rgba(255,140,107,0.8)', fontWeight:'600' }}><span style={{ width:'10px',height:'0',borderTop:'2px dashed #ff8c6b',display:'inline-block' }}/>Avg Duration</span>
+            <span style={{ display:'flex', alignItems:'center', gap:'5px', fontSize:'11px', color:'rgba(129,140,248,0.8)', fontWeight:'600' }}><span style={{ width:'10px',height:'2px',background:'#818cf8',display:'inline-block',borderRadius:'2px' }}/>Sessions</span>
+            <span style={{ display:'flex', alignItems:'center', gap:'5px', fontSize:'11px', color:'rgba(75,108,247,0.8)', fontWeight:'600' }}><span style={{ width:'10px',height:'0',borderTop:'2px dashed #4B6CF7',display:'inline-block' }}/>Avg Duration</span>
           </div>
           <div style={{ display:'flex', gap:'5px', flexWrap:'wrap', justifyContent:'flex-end' }}>
             {RANGES.map(r=>(
               <button key={r.v} onClick={()=>onRangeChange(r.v)} style={{
                 padding:'4px 11px', borderRadius:'50px', border:'1px solid',
                 fontSize:'11px', fontWeight:'700', cursor:'pointer',
-                fontFamily:'var(--font-nunito),sans-serif',
-                background: range===r.v ? '#4AAFF7' : 'transparent',
+                fontFamily:'var(--font-inter), sans-serif',
+                background: range===r.v ? '#4B6CF7' : 'transparent',
                 color: range===r.v ? '#fff' : 'rgba(255,255,255,0.45)',
-                borderColor: range===r.v ? '#4AAFF7' : 'rgba(255,255,255,0.15)',
+                borderColor: range===r.v ? '#4B6CF7' : 'rgba(255,255,255,0.15)',
                 transition:'all .15s',
               }}>{r.l}</button>
             ))}
@@ -226,10 +226,10 @@ function CallsChart({ convs, range, onRangeChange }: { convs: Conversation[]; ra
           {range==='custom' && (
             <div style={{ display:'flex', gap:'6px', alignItems:'center' }}>
               <input type="date" value={customFrom} onChange={e=>setCustomFrom(e.target.value)}
-                style={{ padding:'4px 8px', borderRadius:'7px', border:'1px solid rgba(255,255,255,0.15)', background:'rgba(255,255,255,0.05)', color:'rgba(255,255,255,0.8)', fontSize:'11px', fontFamily:'var(--font-nunito),sans-serif', outline:'none' }} />
+                style={{ padding:'4px 8px', borderRadius:'7px', border:'1px solid rgba(255,255,255,0.15)', background:'rgba(255,255,255,0.05)', color:'rgba(255,255,255,0.8)', fontSize:'11px', fontFamily:'var(--font-inter), sans-serif', outline:'none' }} />
               <span style={{ color:'rgba(255,255,255,0.3)', fontSize:'11px' }}>→</span>
               <input type="date" value={customTo} onChange={e=>setCustomTo(e.target.value)}
-                style={{ padding:'4px 8px', borderRadius:'7px', border:'1px solid rgba(255,255,255,0.15)', background:'rgba(255,255,255,0.05)', color:'rgba(255,255,255,0.8)', fontSize:'11px', fontFamily:'var(--font-nunito),sans-serif', outline:'none' }} />
+                style={{ padding:'4px 8px', borderRadius:'7px', border:'1px solid rgba(255,255,255,0.15)', background:'rgba(255,255,255,0.05)', color:'rgba(255,255,255,0.8)', fontSize:'11px', fontFamily:'var(--font-inter), sans-serif', outline:'none' }} />
             </div>
           )}
         </div>
@@ -304,7 +304,7 @@ function ExportModal({ convs, onClose }: { convs: Conversation[]; onClose: () =>
 
   return (
     <div onClick={onClose} style={{ position:'fixed',inset:0,zIndex:300,background:'rgba(0,0,0,0.7)',backdropFilter:'blur(4px)',display:'flex',alignItems:'center',justifyContent:'center',padding:'16px' }}>
-      <div onClick={e=>e.stopPropagation()} style={{ background:'#0d2137',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'16px',width:'100%',maxWidth:'460px',overflow:'hidden',boxShadow:'0 24px 64px rgba(0,0,0,0.5)' }}>
+      <div onClick={e=>e.stopPropagation()} style={{ background:'#0f1524',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'16px',width:'100%',maxWidth:'460px',overflow:'hidden',boxShadow:'0 24px 64px rgba(0,0,0,0.5)' }}>
         <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',padding:'16px 20px 14px',borderBottom:'1px solid rgba(255,255,255,0.07)' }}>
           <span style={{ fontSize:'14px',fontWeight:'800',color:'#fff' }}>📥 Export Chat History</span>
           <button onClick={onClose} style={{ background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'6px',color:'rgba(255,255,255,0.5)',cursor:'pointer',padding:'3px 8px',fontSize:'13px' }}>✕</button>
@@ -314,15 +314,15 @@ function ExportModal({ convs, onClose }: { convs: Conversation[]; onClose: () =>
             <div style={{ fontSize:'10px',fontWeight:'800',color:'rgba(255,255,255,0.4)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:'8px' }}>Date Range</div>
             <div style={{ display:'flex',gap:'8px' }}>
               {(['week','month','custom'] as const).map(r=>(
-                <button key={r} onClick={()=>setRange(r)} style={{ flex:1,padding:'7px 6px',fontSize:'12px',fontWeight:'700',borderRadius:'8px',border:'1px solid',cursor:'pointer',fontFamily:'var(--font-nunito),sans-serif',background:range===r?'#4AAFF7':'transparent',color:range===r?'#fff':'rgba(255,255,255,0.45)',borderColor:range===r?'#4AAFF7':'rgba(255,255,255,0.15)',transition:'all .15s' }}>
+                <button key={r} onClick={()=>setRange(r)} style={{ flex:1,padding:'7px 6px',fontSize:'12px',fontWeight:'700',borderRadius:'8px',border:'1px solid',cursor:'pointer',fontFamily:'var(--font-inter), sans-serif',background:range===r?'#4B6CF7':'transparent',color:range===r?'#fff':'rgba(255,255,255,0.45)',borderColor:range===r?'#4B6CF7':'rgba(255,255,255,0.15)',transition:'all .15s' }}>
                   {r==='week'?'Last 7 days':r==='month'?'Last 30 days':'Custom'}
                 </button>
               ))}
             </div>
             {range==='custom' && (
               <div style={{ display:'flex',gap:'10px',marginTop:'10px' }}>
-                <label style={{ flex:1,display:'flex',flexDirection:'column',gap:'4px',fontSize:'11px',fontWeight:'700',color:'rgba(255,255,255,0.4)' }}>From<input type="date" value={fromDate} onChange={e=>setFrom(e.target.value)} style={{ padding:'7px 9px',borderRadius:'8px',border:'1px solid rgba(255,255,255,0.15)',background:'rgba(255,255,255,0.05)',color:'rgba(255,255,255,0.8)',fontSize:'12px',fontFamily:'var(--font-nunito),sans-serif',outline:'none' }}/></label>
-                <label style={{ flex:1,display:'flex',flexDirection:'column',gap:'4px',fontSize:'11px',fontWeight:'700',color:'rgba(255,255,255,0.4)' }}>To<input type="date" value={toDate} onChange={e=>setTo(e.target.value)} style={{ padding:'7px 9px',borderRadius:'8px',border:'1px solid rgba(255,255,255,0.15)',background:'rgba(255,255,255,0.05)',color:'rgba(255,255,255,0.8)',fontSize:'12px',fontFamily:'var(--font-nunito),sans-serif',outline:'none' }}/></label>
+                <label style={{ flex:1,display:'flex',flexDirection:'column',gap:'4px',fontSize:'11px',fontWeight:'700',color:'rgba(255,255,255,0.4)' }}>From<input type="date" value={fromDate} onChange={e=>setFrom(e.target.value)} style={{ padding:'7px 9px',borderRadius:'8px',border:'1px solid rgba(255,255,255,0.15)',background:'rgba(255,255,255,0.05)',color:'rgba(255,255,255,0.8)',fontSize:'12px',fontFamily:'var(--font-inter), sans-serif',outline:'none' }}/></label>
+                <label style={{ flex:1,display:'flex',flexDirection:'column',gap:'4px',fontSize:'11px',fontWeight:'700',color:'rgba(255,255,255,0.4)' }}>To<input type="date" value={toDate} onChange={e=>setTo(e.target.value)} style={{ padding:'7px 9px',borderRadius:'8px',border:'1px solid rgba(255,255,255,0.15)',background:'rgba(255,255,255,0.05)',color:'rgba(255,255,255,0.8)',fontSize:'12px',fontFamily:'var(--font-inter), sans-serif',outline:'none' }}/></label>
               </div>
             )}
           </div>
@@ -331,8 +331,8 @@ function ExportModal({ convs, onClose }: { convs: Conversation[]; onClose: () =>
             <div style={{ fontSize:'10px',fontWeight:'800',color:'rgba(255,255,255,0.4)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:'8px' }}>Fields to Export</div>
             <div style={{ display:'flex',flexDirection:'column',gap:'5px' }}>
               {([['name','User Name',''],['date','Date',''],['summary','Transcript Summary',''],['kb','KB Questions','from knowledge base'],['nonkb','Non-KB Questions','not in knowledge base'],['chat','💬 Full Chat History','added as separate sheet']] as [keyof typeof fields,string,string][]).map(([k,l,d])=>(
-                <label key={k} onClick={()=>setFields(f=>({...f,[k]:!f[k]}))} style={{ display:'flex',alignItems:'center',gap:'8px',padding:'8px 10px',borderRadius:'8px',border:`1px solid ${fields[k]?'rgba(74,175,247,0.3)':'rgba(255,255,255,0.08)'}`,background:fields[k]?'rgba(74,175,247,0.08)':'rgba(255,255,255,0.03)',cursor:'pointer',transition:'all .15s',userSelect:'none' }}>
-                  <div style={{ width:'14px',height:'14px',borderRadius:'3px',border:`2px solid ${fields[k]?'#4AAFF7':'rgba(255,255,255,0.2)'}`,background:fields[k]?'#4AAFF7':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .15s' }}>
+                <label key={k} onClick={()=>setFields(f=>({...f,[k]:!f[k]}))} style={{ display:'flex',alignItems:'center',gap:'8px',padding:'8px 10px',borderRadius:'8px',border:`1px solid ${fields[k]?'rgba(75,108,247,0.3)':'rgba(255,255,255,0.08)'}`,background:fields[k]?'rgba(75,108,247,0.08)':'rgba(255,255,255,0.03)',cursor:'pointer',transition:'all .15s',userSelect:'none' }}>
+                  <div style={{ width:'14px',height:'14px',borderRadius:'3px',border:`2px solid ${fields[k]?'#4B6CF7':'rgba(255,255,255,0.2)'}`,background:fields[k]?'#4B6CF7':'transparent',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,transition:'all .15s' }}>
                     {fields[k]&&<span style={{ color:'#fff',fontSize:'9px',lineHeight:1 }}>✓</span>}
                   </div>
                   <span style={{ fontSize:'12px',fontWeight:'600',color:'rgba(255,255,255,0.8)' }}>{l}</span>
@@ -346,8 +346,8 @@ function ExportModal({ convs, onClose }: { convs: Conversation[]; onClose: () =>
             {filtered.length ? `${filtered.length} conversation${filtered.length!==1?'s':''} will be exported` : 'No conversations in this range'}
           </div>
 
-          <button onClick={download} style={{ padding:'11px',borderRadius:'50px',border:'none',background:'#4AAFF7',color:'#fff',fontSize:'13px',fontWeight:'800',cursor:'pointer',fontFamily:'var(--font-nunito),sans-serif',transition:'background .15s' }}
-            onMouseOver={e=>e.currentTarget.style.background='#5fbcff'} onMouseOut={e=>e.currentTarget.style.background='#4AAFF7'}>
+          <button onClick={download} style={{ padding:'11px',borderRadius:'50px',border:'none',background:'#4B6CF7',color:'#fff',fontSize:'13px',fontWeight:'800',cursor:'pointer',fontFamily:'var(--font-inter), sans-serif',transition:'background .15s' }}
+            onMouseOver={e=>e.currentTarget.style.background='#6b82f8'} onMouseOut={e=>e.currentTarget.style.background='#4B6CF7'}>
             ⬇ Download Report
           </button>
         </div>
@@ -366,7 +366,7 @@ export default function AgentDashboardPage() {
   const [activeConv,  setActiveConv]  = useState<string|null>(null)
   const [searchQ,     setSearchQ]     = useState('')
   const [chartRange,  setChartRange]  = useState<number|'all'|'custom'>(30)
-  const [syncStatus,  setSyncStatus]  = useState<{text:string;color:string}>({text:'Never synced',color:'#f76b8a'})
+  const [syncStatus,  setSyncStatus]  = useState<{text:string;color:string}>({text:'Never synced',color:'#f43f72'})
   const [syncing,     setSyncing]     = useState(false)
   const [resyncing,   setResyncing]   = useState(false)
   const [testStatus,  setTestStatus]  = useState<'idle'|'pending'|'success'|'failure'>('idle')
@@ -377,8 +377,8 @@ export default function AgentDashboardPage() {
   const [isAdmin,     setIsAdmin]     = useState(false)
   const [dayFilter,   setDayFilter]   = useState<string|null>(null)
 
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!
-  const API_SECRET  = process.env.NEXT_PUBLIC_API_SECRET!
+  const BACKEND_URL = 'https://agentdashboard-production-5777.up.railway.app'
+  const API_SECRET  = '9a386d5511ebaf9086545ad5ffb20da4664a271ab909e106a67b96fc3d18887e'
 
   // ── Load agent info ─────────────────────────────────────────
   const { data: agent } = useQuery<Agent>({
@@ -532,15 +532,15 @@ export default function AgentDashboardPage() {
   // ── Test badge color ─────────────────────────────────────────
   const testBadgeStyle = {
     idle:    { bg:'rgba(255,255,255,0.05)', color:'rgba(255,255,255,0.4)', border:'rgba(255,255,255,0.1)' },
-    pending: { bg:'rgba(245,166,35,0.1)',   color:'#f5a623',               border:'rgba(245,166,35,0.3)' },
-    success: { bg:'rgba(52,201,142,0.1)',   color:'#34c98e',               border:'rgba(52,201,142,0.3)' },
-    failure: { bg:'rgba(247,107,138,0.1)',  color:'#f76b8a',               border:'rgba(247,107,138,0.3)' },
+    pending: { bg:'rgba(251,146,60,0.1)',   color:'#fb923c',               border:'rgba(251,146,60,0.3)' },
+    success: { bg:'rgba(45,212,160,0.1)',   color:'#2dd4a0',               border:'rgba(45,212,160,0.3)' },
+    failure: { bg:'rgba(244,63,114,0.1)',  color:'#f43f72',               border:'rgba(244,63,114,0.3)' },
   }[testStatus]
 
   const subBadgeStyle = {
-    active:   { bg:'rgba(52,201,142,0.1)',  color:'#34c98e', border:'rgba(52,201,142,0.3)'  },
-    trial:    { bg:'rgba(74,175,247,0.1)',  color:'#4AAFF7', border:'rgba(74,175,247,0.3)'  },
-    inactive: { bg:'rgba(247,107,138,0.1)', color:'#f76b8a', border:'rgba(247,107,138,0.3)' },
+    active:   { bg:'rgba(45,212,160,0.1)',  color:'#2dd4a0', border:'rgba(45,212,160,0.3)'  },
+    trial:    { bg:'rgba(75,108,247,0.1)',  color:'#4B6CF7', border:'rgba(75,108,247,0.3)'  },
+    inactive: { bg:'rgba(244,63,114,0.1)', color:'#f43f72', border:'rgba(244,63,114,0.3)' },
     loading:  { bg:'rgba(255,255,255,0.05)', color:'rgba(255,255,255,0.3)', border:'rgba(255,255,255,0.1)' },
   }[subStatus.type]
 
@@ -562,10 +562,10 @@ export default function AgentDashboardPage() {
         @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
         .sess-card { transition:background .15s,border-color .15s; }
         .sess-card:hover { background:rgba(255,255,255,0.07)!important; }
-        .sess-card.active { border-color:rgba(74,175,247,0.4)!important; background:rgba(74,175,247,0.08)!important; }
+        .sess-card.active { border-color:rgba(75,108,247,0.4)!important; background:rgba(75,108,247,0.08)!important; }
         .user-row { transition:background .15s; }
         .user-row:hover { background:rgba(255,255,255,0.06)!important; }
-        .user-row.active { background:rgba(74,175,247,0.1)!important; border-left:3px solid #4AAFF7!important; }
+        .user-row.active { background:rgba(75,108,247,0.1)!important; border-left:3px solid #4B6CF7!important; }
         ::-webkit-scrollbar{width:4px;height:4px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
         input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.5)}
       `}</style>
@@ -573,12 +573,12 @@ export default function AgentDashboardPage() {
       {/* ── Sub-topbar: agent info + actions ── */}
       <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'24px',flexWrap:'wrap',gap:'12px' }}>
         <div style={{ display:'flex',alignItems:'center',gap:'14px' }}>
-          <button onClick={()=>router.push('/')} style={{ background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'8px',color:'rgba(255,255,255,0.5)',cursor:'pointer',padding:'7px 12px',fontSize:'13px',fontFamily:'var(--font-nunito),sans-serif',fontWeight:'700',transition:'all .15s' }}
+          <button onClick={()=>router.push('/')} style={{ background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'8px',color:'rgba(255,255,255,0.5)',cursor:'pointer',padding:'7px 12px',fontSize:'13px',fontFamily:'var(--font-inter), sans-serif',fontWeight:'700',transition:'all .15s' }}
             onMouseOver={e=>{e.currentTarget.style.background='rgba(255,255,255,0.1)';e.currentTarget.style.color='#fff'}} onMouseOut={e=>{e.currentTarget.style.background='rgba(255,255,255,0.06)';e.currentTarget.style.color='rgba(255,255,255,0.5)'}}>
             ← Back
           </button>
           {/* Agent avatar */}
-          <div style={{ width:'42px',height:'42px',borderRadius:'11px',overflow:'hidden',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'22px',background:'rgba(74,175,247,0.12)',border:'1px solid rgba(74,175,247,0.2)',flexShrink:0 }}>
+          <div style={{ width:'42px',height:'42px',borderRadius:'11px',overflow:'hidden',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'22px',background:'rgba(75,108,247,0.12)',border:'1px solid rgba(75,108,247,0.2)',flexShrink:0 }}>
             {agent?.image_url ? <img src={agent.image_url} alt="" style={{ width:'100%',height:'100%',objectFit:'cover' }}/> : (agent?.emoji||'🤖')}
           </div>
           <div>
@@ -595,16 +595,16 @@ export default function AgentDashboardPage() {
                 <div style={{ width:'6px',height:'6px',borderRadius:'50%',background:syncStatus.color,flexShrink:0 }}/>
                 <span style={{ color:'rgba(255,255,255,0.4)' }}>{syncStatus.text}</span>
               </div>
-              <button onClick={()=>setExportOpen(true)} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'7px 14px',borderRadius:'50px',border:'1px solid rgba(155,127,244,0.3)',background:'rgba(155,127,244,0.1)',color:'#9b7ff4',fontSize:'12px',fontWeight:'700',cursor:'pointer',fontFamily:'var(--font-nunito),sans-serif',transition:'all .15s' }}
-                onMouseOver={e=>{e.currentTarget.style.background='#9b7ff4';e.currentTarget.style.color='#fff'}} onMouseOut={e=>{e.currentTarget.style.background='rgba(155,127,244,0.1)';e.currentTarget.style.color='#9b7ff4'}}>
+              <button onClick={()=>setExportOpen(true)} style={{ display:'flex',alignItems:'center',gap:'6px',padding:'7px 14px',borderRadius:'50px',border:'1px solid rgba(129,140,248,0.3)',background:'rgba(129,140,248,0.1)',color:'#818cf8',fontSize:'12px',fontWeight:'700',cursor:'pointer',fontFamily:'var(--font-inter), sans-serif',transition:'all .15s' }}
+                onMouseOver={e=>{e.currentTarget.style.background='#818cf8';e.currentTarget.style.color='#fff'}} onMouseOut={e=>{e.currentTarget.style.background='rgba(129,140,248,0.1)';e.currentTarget.style.color='#818cf8'}}>
                 Download Report
               </button>
-              <button onClick={triggerFullResync} disabled={resyncing} style={{ padding:'7px 14px',borderRadius:'50px',border:'1px solid rgba(245,166,35,0.3)',background:'rgba(245,166,35,0.1)',color:'#f5a623',fontSize:'12px',fontWeight:'700',cursor:resyncing?'not-allowed':'pointer',fontFamily:'var(--font-nunito),sans-serif',opacity:resyncing?.6:1,transition:'all .15s' }}
-                onMouseOver={e=>{if(!resyncing){e.currentTarget.style.background='#f5a623';e.currentTarget.style.color='#fff'}}} onMouseOut={e=>{e.currentTarget.style.background='rgba(245,166,35,0.1)';e.currentTarget.style.color='#f5a623'}}>
+              <button onClick={triggerFullResync} disabled={resyncing} style={{ padding:'7px 14px',borderRadius:'50px',border:'1px solid rgba(251,146,60,0.3)',background:'rgba(251,146,60,0.1)',color:'#fb923c',fontSize:'12px',fontWeight:'700',cursor:resyncing?'not-allowed':'pointer',fontFamily:'var(--font-inter), sans-serif',opacity:resyncing?.6:1,transition:'all .15s' }}
+                onMouseOver={e=>{if(!resyncing){e.currentTarget.style.background='#fb923c';e.currentTarget.style.color='#fff'}}} onMouseOut={e=>{e.currentTarget.style.background='rgba(251,146,60,0.1)';e.currentTarget.style.color='#fb923c'}}>
                 {resyncing?'♻️ Resyncing…':'♻️ Re-sync All'}
               </button>
-              <button onClick={triggerSync} disabled={syncing} style={{ padding:'7px 14px',borderRadius:'50px',border:'1px solid rgba(52,201,142,0.3)',background:'rgba(52,201,142,0.1)',color:'#34c98e',fontSize:'12px',fontWeight:'700',cursor:syncing?'not-allowed':'pointer',fontFamily:'var(--font-nunito),sans-serif',opacity:syncing?.7:1,transition:'all .15s',animation:syncing?'syncPulse 1s infinite':'' }}
-                onMouseOver={e=>{if(!syncing){e.currentTarget.style.background='#34c98e';e.currentTarget.style.color='#fff'}}} onMouseOut={e=>{e.currentTarget.style.background='rgba(52,201,142,0.1)';e.currentTarget.style.color='#34c98e'}}>
+              <button onClick={triggerSync} disabled={syncing} style={{ padding:'7px 14px',borderRadius:'50px',border:'1px solid rgba(45,212,160,0.3)',background:'rgba(45,212,160,0.1)',color:'#2dd4a0',fontSize:'12px',fontWeight:'700',cursor:syncing?'not-allowed':'pointer',fontFamily:'var(--font-inter), sans-serif',opacity:syncing?.7:1,transition:'all .15s',animation:syncing?'syncPulse 1s infinite':'' }}
+                onMouseOver={e=>{if(!syncing){e.currentTarget.style.background='#2dd4a0';e.currentTarget.style.color='#fff'}}} onMouseOut={e=>{e.currentTarget.style.background='rgba(45,212,160,0.1)';e.currentTarget.style.color='#2dd4a0'}}>
                 {syncing?'🔄 Syncing…':'🔄 Sync Now'}
               </button>
             </>
@@ -612,7 +612,7 @@ export default function AgentDashboardPage() {
           {/* Tab switcher */}
           <div style={{ display:'flex',background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'10px',overflow:'hidden' }}>
             {(['overview','chat'] as const).map(t=>(
-              <button key={t} onClick={()=>setTab(t)} style={{ padding:'8px 16px',border:'none',cursor:'pointer',fontSize:'12px',fontWeight:'700',fontFamily:'var(--font-nunito),sans-serif',background:tab===t?'rgba(74,175,247,0.15)':'transparent',color:tab===t?'#4AAFF7':'rgba(255,255,255,0.45)',transition:'all .15s',borderRight:t==='overview'?'1px solid rgba(255,255,255,0.08)':'none' }}>
+              <button key={t} onClick={()=>setTab(t)} style={{ padding:'8px 16px',border:'none',cursor:'pointer',fontSize:'12px',fontWeight:'700',fontFamily:'var(--font-inter), sans-serif',background:tab===t?'rgba(75,108,247,0.15)':'transparent',color:tab===t?'#4B6CF7':'rgba(255,255,255,0.45)',transition:'all .15s',borderRight:t==='overview'?'1px solid rgba(255,255,255,0.08)':'none' }}>
                 {t==='overview'?'📊 Overview':'💬 Chat History'}
               </button>
             ))}
@@ -621,7 +621,7 @@ export default function AgentDashboardPage() {
       </div>
 
       {error && (
-        <div style={{ padding:'14px 18px',background:'rgba(247,107,138,0.1)',border:'1px solid rgba(247,107,138,0.2)',borderRadius:'12px',color:'#f9a8bb',fontSize:'13px',marginBottom:'20px' }}>
+        <div style={{ padding:'14px 18px',background:'rgba(244,63,114,0.1)',border:'1px solid rgba(244,63,114,0.2)',borderRadius:'12px',color:'#fda4af',fontSize:'13px',marginBottom:'20px' }}>
           🔌 Backend offline — start your backend server and refresh.
         </div>
       )}
@@ -653,7 +653,7 @@ export default function AgentDashboardPage() {
             <div style={{ ...S.statCard, animationDelay:'150ms' }}>
               <div style={{ fontSize:'10px',fontWeight:'800',color:'rgba(255,255,255,0.35)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:'8px' }}>Agent Test</div>
               <div style={{ fontSize:'14px',fontWeight:'700',color:'rgba(255,255,255,0.7)',marginBottom:'8px' }}>Run a test call</div>
-              <button onClick={runAgentTest} disabled={testRunning||!agent?.api_key} style={{ display:'inline-flex',alignItems:'center',gap:'6px',padding:'8px 16px',background:testRunning?'rgba(155,127,244,0.4)':'#9b7ff4',border:'none',borderRadius:'50px',color:'#fff',fontSize:'12px',fontWeight:'800',cursor:testRunning||!agent?.api_key?'not-allowed':'pointer',fontFamily:'var(--font-nunito),sans-serif',transition:'background .15s' }}>
+              <button onClick={runAgentTest} disabled={testRunning||!agent?.api_key} style={{ display:'inline-flex',alignItems:'center',gap:'6px',padding:'8px 16px',background:testRunning?'rgba(129,140,248,0.4)':'#818cf8',border:'none',borderRadius:'50px',color:'#fff',fontSize:'12px',fontWeight:'800',cursor:testRunning||!agent?.api_key?'not-allowed':'pointer',fontFamily:'var(--font-inter), sans-serif',transition:'background .15s' }}>
                 {testRunning?'⏳ Running…':'🧪 Test Agent'}
               </button>
             </div>
@@ -690,7 +690,7 @@ export default function AgentDashboardPage() {
               <div style={{ position:'relative' }}>
                 <span style={{ position:'absolute',left:'10px',top:'50%',transform:'translateY(-50%)',fontSize:'12px' }}>🔍</span>
                 <input value={searchQ} onChange={e=>setSearchQ(e.target.value)} placeholder="Search users…"
-                  style={{ width:'100%',padding:'7px 10px 7px 30px',borderRadius:'8px',border:'1px solid rgba(255,255,255,0.1)',background:'rgba(255,255,255,0.05)',color:'rgba(255,255,255,0.8)',fontSize:'12px',fontFamily:'var(--font-nunito),sans-serif',outline:'none',boxSizing:'border-box' }} />
+                  style={{ width:'100%',padding:'7px 10px 7px 30px',borderRadius:'8px',border:'1px solid rgba(255,255,255,0.1)',background:'rgba(255,255,255,0.05)',color:'rgba(255,255,255,0.8)',fontSize:'12px',fontFamily:'var(--font-inter), sans-serif',outline:'none',boxSizing:'border-box' }} />
               </div>
             </div>
             <div style={{ overflowY:'auto',flex:1,padding:'6px 0' }}>
@@ -709,14 +709,14 @@ export default function AgentDashboardPage() {
                       <div key={name} className={`user-row${name===activeUser?' active':''}`}
                         onClick={()=>{ setActiveUser(name); setActiveConv(null); setDayFilter(null) }}
                         style={{ display:'flex',alignItems:'center',gap:'10px',padding:'9px 14px 9px 16px',cursor:'pointer',borderLeft:'3px solid transparent',animation:`fadeUp .25s ease ${i*20}ms both` }}>
-                        <div style={{ width:'32px',height:'32px',borderRadius:'50%',background:'rgba(74,175,247,0.15)',border:'1px solid rgba(74,175,247,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'11px',fontWeight:'800',color:'#4AAFF7',flexShrink:0 }}>
+                        <div style={{ width:'32px',height:'32px',borderRadius:'50%',background:'rgba(75,108,247,0.15)',border:'1px solid rgba(75,108,247,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'11px',fontWeight:'800',color:'#4B6CF7',flexShrink:0 }}>
                           {initials(name)}
                         </div>
                         <div style={{ flex:1,minWidth:0 }}>
                           <div style={{ fontSize:'12px',fontWeight:'700',color:'rgba(255,255,255,0.85)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{name}</div>
                           <div style={{ fontSize:'10px',color:'rgba(255,255,255,0.3)',marginTop:'1px' }}>{convs.length} session{convs.length!==1?'s':''} · last {latest?dayLabelShort(latest):'—'}</div>
                         </div>
-                        <div style={{ flexShrink:0,background:'rgba(74,175,247,0.1)',color:'#4AAFF7',border:'1px solid rgba(74,175,247,0.2)',borderRadius:'50px',fontSize:'10px',fontWeight:'800',padding:'1px 7px' }}>{convs.length}</div>
+                        <div style={{ flexShrink:0,background:'rgba(75,108,247,0.1)',color:'#4B6CF7',border:'1px solid rgba(75,108,247,0.2)',borderRadius:'50px',fontSize:'10px',fontWeight:'800',padding:'1px 7px' }}>{convs.length}</div>
                       </div>
                     )
                   })}
@@ -735,11 +735,11 @@ export default function AgentDashboardPage() {
               {/* Day filter chips */}
               {activeUser && dayFilterKeys.length > 1 && (
                 <div style={{ display:'flex',gap:'5px',flexWrap:'wrap' }}>
-                  <button onClick={()=>setDayFilter(null)} style={{ padding:'3px 10px',borderRadius:'50px',border:'1px solid',fontSize:'10px',fontWeight:'700',cursor:'pointer',fontFamily:'var(--font-nunito),sans-serif',background:dayFilter===null?'#4AAFF7':'transparent',color:dayFilter===null?'#fff':'rgba(255,255,255,0.4)',borderColor:dayFilter===null?'#4AAFF7':'rgba(255,255,255,0.15)',transition:'all .15s' }}>
+                  <button onClick={()=>setDayFilter(null)} style={{ padding:'3px 10px',borderRadius:'50px',border:'1px solid',fontSize:'10px',fontWeight:'700',cursor:'pointer',fontFamily:'var(--font-inter), sans-serif',background:dayFilter===null?'#4B6CF7':'transparent',color:dayFilter===null?'#fff':'rgba(255,255,255,0.4)',borderColor:dayFilter===null?'#4B6CF7':'rgba(255,255,255,0.15)',transition:'all .15s' }}>
                     All ({userConvs.length})
                   </button>
                   {dayFilterKeys.map(k=>(
-                    <button key={k} onClick={()=>setDayFilter(k)} style={{ padding:'3px 10px',borderRadius:'50px',border:'1px solid',fontSize:'10px',fontWeight:'700',cursor:'pointer',fontFamily:'var(--font-nunito),sans-serif',background:dayFilter===k?'#4AAFF7':'transparent',color:dayFilter===k?'#fff':'rgba(255,255,255,0.4)',borderColor:dayFilter===k?'#4AAFF7':'rgba(255,255,255,0.15)',transition:'all .15s' }}>
+                    <button key={k} onClick={()=>setDayFilter(k)} style={{ padding:'3px 10px',borderRadius:'50px',border:'1px solid',fontSize:'10px',fontWeight:'700',cursor:'pointer',fontFamily:'var(--font-inter), sans-serif',background:dayFilter===k?'#4B6CF7':'transparent',color:dayFilter===k?'#fff':'rgba(255,255,255,0.4)',borderColor:dayFilter===k?'#4B6CF7':'rgba(255,255,255,0.15)',transition:'all .15s' }}>
                       {dayFilterDays[k]} ({userConvs.filter(r=>daySort(r.start_time_unix)===k).length})
                     </button>
                   ))}
@@ -812,13 +812,13 @@ export default function AgentDashboardPage() {
                   {/* Transcript header */}
                   <div style={{ padding:'14px 16px',borderBottom:'1px solid rgba(255,255,255,0.07)',flexShrink:0 }}>
                     <div style={{ display:'flex',alignItems:'center',gap:'10px',marginBottom:'8px' }}>
-                      <div style={{ width:'32px',height:'32px',borderRadius:'50%',background:'rgba(74,175,247,0.15)',border:'1px solid rgba(74,175,247,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'11px',fontWeight:'800',color:'#4AAFF7',flexShrink:0 }}>{ini}</div>
+                      <div style={{ width:'32px',height:'32px',borderRadius:'50%',background:'rgba(75,108,247,0.15)',border:'1px solid rgba(75,108,247,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'11px',fontWeight:'800',color:'#4B6CF7',flexShrink:0 }}>{ini}</div>
                       <div>
-                        <div style={{ fontSize:'12px',fontWeight:'800',color:'#fff' }}>Chat with <em style={{ fontStyle:'italic',color:'#4AAFF7' }}>{activeUserName}</em></div>
+                        <div style={{ fontSize:'12px',fontWeight:'800',color:'#fff' }}>Chat with <em style={{ fontStyle:'italic',color:'#4B6CF7' }}>{activeUserName}</em></div>
                         <div style={{ fontSize:'9px',fontFamily:'var(--font-fira)',color:'rgba(255,255,255,0.25)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>{activeConvData.conversation_id}</div>
                       </div>
                     </div>
-                    {tok&&<div style={{ display:'inline-flex',alignItems:'center',gap:'5px',padding:'3px 10px',borderRadius:'50px',background:'rgba(52,201,142,0.1)',border:'1px solid rgba(52,201,142,0.2)',fontSize:'10px',fontWeight:'700',color:'#34c98e' }}>🔢 {fmtTokens(tok.input)} in · {fmtTokens(tok.output)} out</div>}
+                    {tok&&<div style={{ display:'inline-flex',alignItems:'center',gap:'5px',padding:'3px 10px',borderRadius:'50px',background:'rgba(45,212,160,0.1)',border:'1px solid rgba(45,212,160,0.2)',fontSize:'10px',fontWeight:'700',color:'#2dd4a0' }}>🔢 {fmtTokens(tok.input)} in · {fmtTokens(tok.output)} out</div>}
                     {/* Info rows */}
                     <div style={{ marginTop:'10px',display:'flex',flexDirection:'column',gap:'4px' }}>
                       {[
@@ -832,8 +832,8 @@ export default function AgentDashboardPage() {
                           <span style={{ color:'rgba(255,255,255,0.65)',fontWeight:'600',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1 }}>{v}</span>
                         </div>
                       ))}
-                      {activeConvData.kb_question_list&&<div style={{ fontSize:'10px' }}><span style={{ color:'rgba(255,255,255,0.3)',fontWeight:'700' }}>KB Qs: </span><span style={{ color:'rgba(52,201,142,0.8)',fontWeight:'600' }}>{fmtList(activeConvData.kb_question_list)}</span></div>}
-                      {activeConvData.non_kb_question_list&&<div style={{ fontSize:'10px' }}><span style={{ color:'rgba(255,255,255,0.3)',fontWeight:'700' }}>Non-KB: </span><span style={{ color:'rgba(245,166,35,0.8)',fontWeight:'600' }}>{fmtList(activeConvData.non_kb_question_list)}</span></div>}
+                      {activeConvData.kb_question_list&&<div style={{ fontSize:'10px' }}><span style={{ color:'rgba(255,255,255,0.3)',fontWeight:'700' }}>KB Qs: </span><span style={{ color:'rgba(45,212,160,0.8)',fontWeight:'600' }}>{fmtList(activeConvData.kb_question_list)}</span></div>}
+                      {activeConvData.non_kb_question_list&&<div style={{ fontSize:'10px' }}><span style={{ color:'rgba(255,255,255,0.3)',fontWeight:'700' }}>Non-KB: </span><span style={{ color:'rgba(251,146,60,0.8)',fontWeight:'600' }}>{fmtList(activeConvData.non_kb_question_list)}</span></div>}
                     </div>
                   </div>
                   {/* Messages */}
@@ -845,16 +845,16 @@ export default function AgentDashboardPage() {
                       const tStr=ts!=null?`${String(Math.floor(ts/60)).padStart(2,'0')}:${String(ts%60).padStart(2,'0')}`:null
                       return (
                         <div key={i} style={{ display:'flex',gap:'8px',marginBottom:'10px',justifyContent:isUser?'flex-end':'flex-start',animation:`fadeUp .2s ease ${Math.min(i*10,200)}ms both` }}>
-                          {!isUser&&<div style={{ width:'26px',height:'26px',borderRadius:'50%',background:'rgba(155,127,244,0.15)',border:'1px solid rgba(155,127,244,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',flexShrink:0 }}>🤖</div>}
+                          {!isUser&&<div style={{ width:'26px',height:'26px',borderRadius:'50%',background:'rgba(129,140,248,0.15)',border:'1px solid rgba(129,140,248,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',flexShrink:0 }}>🤖</div>}
                           <div style={{ maxWidth:'80%' }}>
                             <div style={{ fontSize:'10px',fontWeight:'700',color:'rgba(255,255,255,0.3)',marginBottom:'3px',textAlign:isUser?'right':'left' }}>
                               {isUser?activeUserName:'Agent'}{tStr?` · ${tStr}`:''}
                             </div>
-                            <div style={{ padding:'9px 12px',borderRadius:isUser?'14px 4px 14px 14px':'4px 14px 14px 14px',background:isUser?'rgba(74,175,247,0.15)':'rgba(255,255,255,0.06)',border:`1px solid ${isUser?'rgba(74,175,247,0.2)':'rgba(255,255,255,0.08)'}`,fontSize:'12px',lineHeight:'1.55',color:isUser?'rgba(200,230,255,0.9)':'rgba(255,255,255,0.75)',fontWeight:'500' }}>
+                            <div style={{ padding:'9px 12px',borderRadius:isUser?'14px 4px 14px 14px':'4px 14px 14px 14px',background:isUser?'rgba(75,108,247,0.15)':'rgba(255,255,255,0.06)',border:`1px solid ${isUser?'rgba(75,108,247,0.2)':'rgba(255,255,255,0.08)'}`,fontSize:'12px',lineHeight:'1.55',color:isUser?'rgba(200,230,255,0.9)':'rgba(255,255,255,0.75)',fontWeight:'500' }}>
                               {t.message||t.text||''}
                             </div>
                           </div>
-                          {isUser&&<div style={{ width:'26px',height:'26px',borderRadius:'50%',background:'rgba(74,175,247,0.15)',border:'1px solid rgba(74,175,247,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'11px',fontWeight:'800',color:'#4AAFF7',flexShrink:0 }}>{ini}</div>}
+                          {isUser&&<div style={{ width:'26px',height:'26px',borderRadius:'50%',background:'rgba(75,108,247,0.15)',border:'1px solid rgba(75,108,247,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'11px',fontWeight:'800',color:'#4B6CF7',flexShrink:0 }}>{ini}</div>}
                         </div>
                       )
                     })}

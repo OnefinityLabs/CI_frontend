@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
-import { Nunito, Fira_Code } from 'next/font/google'
+import { Inter, Fira_Code } from 'next/font/google'
 import './globals.css'
 import Providers from './providers'
 
-const nunito = Nunito({
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-nunito',
+  variable: '--font-inter',
 })
 
 const firaCode = Fira_Code({
@@ -27,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${nunito.variable} ${firaCode.variable}`}>
+      <body className={`${inter.variable} ${firaCode.variable}`}>
         {/* Providers wraps everything so TanStack Query is available on every page */}
         <Providers>
           {children}

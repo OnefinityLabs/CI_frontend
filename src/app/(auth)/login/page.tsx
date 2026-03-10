@@ -68,7 +68,7 @@ function ParticleBackground() {
             ctx.beginPath()
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.strokeStyle = `rgba(74, 175, 247, ${lineAlpha})`
+            ctx.strokeStyle = `rgba(75, 108, 247, ${lineAlpha})`
             ctx.lineWidth = 1
             ctx.stroke()
           }
@@ -79,7 +79,7 @@ function ParticleBackground() {
       for (const p of particles) {
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(74, 175, 247, ${p.alpha})`
+        ctx.fillStyle = `rgba(75, 108, 247, ${p.alpha})`
         ctx.fill()
       }
 
@@ -188,13 +188,13 @@ export default function LoginPage() {
           font-size: 14px;
           color: #f0eee9;
           outline: none;
-          font-family: var(--font-nunito), sans-serif;
+          font-family: var(--font-inter), sans-serif;
           transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
         }
         .ci-input:focus {
-          border-color: rgba(74,175,247,0.6);
+          border-color: rgba(75,108,247,0.6);
           background: rgba(255,255,255,0.09);
-          box-shadow: 0 0 0 3px rgba(74,175,247,0.1);
+          box-shadow: 0 0 0 3px rgba(75,108,247,0.1);
         }
         .ci-input::placeholder { color: rgba(255,255,255,0.25); }
 
@@ -206,7 +206,7 @@ export default function LoginPage() {
           margin-bottom: 7px;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-          font-family: var(--font-nunito), sans-serif;
+          font-family: var(--font-inter), sans-serif;
         }
 
         .ci-tab {
@@ -217,7 +217,7 @@ export default function LoginPage() {
           font-size: 12px;
           font-weight: 700;
           cursor: pointer;
-          font-family: var(--font-nunito), sans-serif;
+          font-family: var(--font-inter), sans-serif;
           letter-spacing: 0.07em;
           text-transform: uppercase;
           border-bottom: 2px solid transparent;
@@ -230,19 +230,19 @@ export default function LoginPage() {
           padding: 13px;
           border-radius: 9px;
           border: none;
-          background: #4AAFF7;
+          background: #4B6CF7;
           color: #fff;
           font-size: 14px;
           font-weight: 700;
           cursor: pointer;
-          font-family: var(--font-nunito), sans-serif;
+          font-family: var(--font-inter), sans-serif;
           letter-spacing: 0.02em;
           transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
         }
         .ci-btn:hover:not(:disabled) {
-          background: #5fbcff;
+          background: #6b82f8;
           transform: translateY(-2px);
-          box-shadow: 0 6px 24px rgba(74,175,247,0.35);
+          box-shadow: 0 6px 24px rgba(75,108,247,0.35);
         }
         .ci-btn:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
         .ci-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
@@ -262,13 +262,13 @@ export default function LoginPage() {
       {/* Dark navy background */}
       <div style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #091c2e 0%, #0d2137 50%, #091c2e 100%)',
+        background: '#0a0e1a',
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '32px 16px',
-        fontFamily: 'var(--font-nunito), sans-serif',
+        fontFamily: 'var(--font-inter), sans-serif',
       }}>
 
         {/* Animated particle canvas */}
@@ -283,7 +283,7 @@ export default function LoginPage() {
           top: '50%', left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '800px', height: '600px',
-          background: 'radial-gradient(ellipse, rgba(74,175,247,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(75,108,247,0.06) 0%, transparent 70%)',
           pointerEvents: 'none',
           zIndex: 1,
         }} />
@@ -317,7 +317,7 @@ export default function LoginPage() {
               fontWeight: '800',
               color: 'rgba(255,255,255,0.75)',
               letterSpacing: '-0.2px',
-              fontFamily: 'var(--font-nunito), sans-serif',
+              fontFamily: 'var(--font-inter), sans-serif',
             }}>
               Conversation Intelligence
             </span>
@@ -354,7 +354,7 @@ export default function LoginPage() {
                 onClick={() => switchMode(m)}
                 style={{
                   color: mode === m ? '#f0eee9' : 'rgba(255,255,255,0.3)',
-                  borderBottomColor: mode === m ? '#4AAFF7' : 'transparent',
+                  borderBottomColor: mode === m ? '#4B6CF7' : 'transparent',
                 }}
               >
                 {m === 'signin' ? 'Sign in' : 'Sign up'}
@@ -389,8 +389,8 @@ export default function LoginPage() {
                 {mode === 'signin' && (
                   <button style={{
                     background: 'none', border: 'none', fontSize: '11px',
-                    color: 'rgba(74,175,247,0.8)', cursor: 'pointer',
-                    fontWeight: '600', fontFamily: 'var(--font-nunito), sans-serif', padding: 0,
+                    color: 'rgba(75,108,247,0.8)', cursor: 'pointer',
+                    fontWeight: '600', fontFamily: 'var(--font-inter), sans-serif', padding: 0,
                   }}>
                     Forgot?
                   </button>
@@ -418,14 +418,14 @@ export default function LoginPage() {
             <div style={{
               marginTop: '14px',
               display: 'flex', alignItems: 'flex-start', gap: '9px',
-              background: 'rgba(247,107,138,0.1)',
-              border: '1px solid rgba(247,107,138,0.25)',
-              borderLeft: '3px solid #f76b8a',
+              background: 'rgba(244,63,114,0.1)',
+              border: '1px solid rgba(244,63,114,0.25)',
+              borderLeft: '3px solid #f43f72',
               borderRadius: '9px',
               padding: '10px 13px',
               fontSize: '13px',
-              color: '#f9a8bb',
-              fontFamily: 'var(--font-nunito), sans-serif',
+              color: '#fda4af',
+              fontFamily: 'var(--font-inter), sans-serif',
               animation: 'fadeUp 0.18s ease both',
             }}>
               <span style={{ flexShrink: 0 }}>⚠</span> {error}
@@ -435,14 +435,14 @@ export default function LoginPage() {
             <div style={{
               marginTop: '14px',
               display: 'flex', alignItems: 'flex-start', gap: '9px',
-              background: 'rgba(52,201,142,0.1)',
-              border: '1px solid rgba(52,201,142,0.25)',
-              borderLeft: '3px solid #34c98e',
+              background: 'rgba(45,212,160,0.1)',
+              border: '1px solid rgba(45,212,160,0.25)',
+              borderLeft: '3px solid #2dd4a0',
               borderRadius: '9px',
               padding: '10px 13px',
               fontSize: '13px',
-              color: '#6ee8b8',
-              fontFamily: 'var(--font-nunito), sans-serif',
+              color: '#5eead4',
+              fontFamily: 'var(--font-inter), sans-serif',
               animation: 'fadeUp 0.18s ease both',
             }}>
               <span style={{ flexShrink: 0 }}>✓</span> {success}
@@ -463,7 +463,7 @@ export default function LoginPage() {
             fontSize: '11px',
             color: 'rgba(255,255,255,0.2)',
             textAlign: 'center',
-            fontFamily: 'var(--font-nunito), sans-serif',
+            fontFamily: 'var(--font-inter), sans-serif',
             letterSpacing: '0.02em',
           }}>
             Secured via Supabase Auth
@@ -477,15 +477,15 @@ export default function LoginPage() {
           </div>
 
           {/* Switch mode */}
-          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.32)', textAlign: 'center', fontFamily: 'var(--font-nunito), sans-serif' }}>
+          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.32)', textAlign: 'center', fontFamily: 'var(--font-inter), sans-serif' }}>
             {mode === 'signin'
               ? <>No account?{' '}
-                  <button onClick={() => switchMode('signup')} style={{ background: 'none', border: 'none', color: '#4AAFF7', cursor: 'pointer', fontWeight: '700', fontSize: '13px', padding: 0, fontFamily: 'var(--font-nunito), sans-serif' }}>
+                  <button onClick={() => switchMode('signup')} style={{ background: 'none', border: 'none', color: '#4B6CF7', cursor: 'pointer', fontWeight: '700', fontSize: '13px', padding: 0, fontFamily: 'var(--font-inter), sans-serif' }}>
                     Create one →
                   </button>
                 </>
               : <>Have an account?{' '}
-                  <button onClick={() => switchMode('signin')} style={{ background: 'none', border: 'none', color: '#4AAFF7', cursor: 'pointer', fontWeight: '700', fontSize: '13px', padding: 0, fontFamily: 'var(--font-nunito), sans-serif' }}>
+                  <button onClick={() => switchMode('signin')} style={{ background: 'none', border: 'none', color: '#4B6CF7', cursor: 'pointer', fontWeight: '700', fontSize: '13px', padding: 0, fontFamily: 'var(--font-inter), sans-serif' }}>
                     Sign in →
                   </button>
                 </>
