@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import CILogo from '@/components/ui/CILogo'
-import type { Agent, AgentColor } from '@/types'
+import { usePlatform } from './layout'
+import type { Agent, AgentColor, Platform } from '@/types'
 
 // ── Helpers ──────────────────────────────────────────────────
 function fmtDate(ts: string) {
@@ -20,10 +21,10 @@ function fmtDate(ts: string) {
 // Maps your AgentColor to a visible accent on dark backgrounds
 const ACCENT: Record<AgentColor, string> = {
   peach: '#ff8c6b',
-  lav:   '#9b7ff4',
-  mint:  '#34c98e',
-  sky:   '#4aaff7',
-  rose:  '#f76b8a',
+  lav: '#9b7ff4',
+  mint: '#34c98e',
+  sky: '#4aaff7',
+  rose: '#f76b8a',
   amber: '#f5a623',
 }
 
@@ -51,7 +52,7 @@ function AgentStatPill({ agentDbId }: { agentDbId: string }) {
   }
 
   if (isLoading) return <span style={pillStyle}>Loading stats…</span>
-  if (isError)   return <span style={pillStyle}>Backend offline</span>
+  if (isError) return <span style={pillStyle}>Backend offline</span>
 
   return (
     <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -69,18 +70,19 @@ function AgentStatPill({ agentDbId }: { agentDbId: string }) {
 const COLORS: AgentColor[] = ['lav', 'peach', 'mint', 'sky', 'rose', 'amber']
 const EMOJIS = ['🤖', '🎙️', '💬', '🧠', '⚙️', '🏭', '📋', '🌐', '🔬', '📞']
 
-function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Agent | null }) {
+function AgentModal({ onClose, editAgent, currentPlatform }: { onClose: () => void; editAgent: Agent | null; currentPlatform: Platform }) {
   const qc = useQueryClient()
-  const [name, setName]           = useState(editAgent?.name || '')
-  const [agentId, setAgentId]     = useState(editAgent?.agent_id || '')
-  const [apiKey, setApiKey]       = useState(editAgent?.api_key || '')
-  const [color, setColor]         = useState<AgentColor>(editAgent?.color || 'lav')
-  const [emoji, setEmoji]         = useState(editAgent?.emoji || '🤖')
+  const [name, setName] = useState(editAgent?.name || '')
+  const [agentId, setAgentId] = useState(editAgent?.agent_id || '')
+  const [apiKey, setApiKey] = useState(editAgent?.api_key || '')
+  const [color, setColor] = useState<AgentColor>(editAgent?.color || 'lav')
+  const [emoji, setEmoji] = useState(editAgent?.emoji || '🤖')
+  const [agentPlatform] = useState<Platform>(editAgent?.platform || currentPlatform)
   const [avatarTab, setAvatarTab] = useState<'icon' | 'image'>(editAgent?.image_url ? 'image' : 'icon')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>(editAgent?.image_url || '')
-  const [error, setError]         = useState('')
-  const [saving, setSaving]       = useState(false)
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
 
   function handleFile(file: File) {
     if (file.size > 2 * 1024 * 1024) { setError('Image must be under 2 MB'); return }
@@ -108,11 +110,11 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
 
       if (editAgent) {
         if (imageFile) imgUrl = await uploadImage(editAgent.id, imageFile)
-        const { error } = await supabase.from('agents').update({ name: name.trim(), agent_id: agentId.trim(), api_key: apiKey.trim(), emoji, color, image_url: imgUrl }).eq('id', editAgent.id)
+        const { error } = await supabase.from('agents').update({ name: name.trim(), agent_id: agentId.trim(), api_key: apiKey.trim() || undefined, emoji, color, platform: agentPlatform, image_url: imgUrl }).eq('id', editAgent.id)
         if (error) throw new Error(error.message)
       } else {
         const { data: ins, error } = await supabase.from('agents')
-          .insert({ name: name.trim(), agent_id: agentId.trim(), api_key: apiKey.trim(), emoji, color, image_url: null })
+          .insert({ name: name.trim(), agent_id: agentId.trim(), api_key: apiKey.trim() || undefined, emoji, color, platform: agentPlatform, image_url: null })
           .select('id').single()
         if (error) throw new Error(error.message)
         if (imageFile) {
@@ -178,12 +180,25 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
               <input className="m-input" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Indoo HR Bot, Sales Agent…" />
             </div>
             <div>
-              <label className="m-label">Agent ID</label>
-              <input className="m-input" value={agentId} onChange={e => setAgentId(e.target.value)} placeholder="agent_xxxxxxxxxxxxxxxx" style={{ fontFamily: 'var(--font-fira)', fontSize: '13px' }} />
+              <label className="m-label">{agentPlatform === 'vapi' ? 'Assistant ID' : 'Agent ID'}</label>
+              <input className="m-input" value={agentId} onChange={e => setAgentId(e.target.value)} placeholder={agentPlatform === 'vapi' ? '881c1a89-b6d7-4b0d-a5f4-…' : 'agent_xxxxxxxxxxxxxxxx'} style={{ fontFamily: 'var(--font-fira)', fontSize: '13px' }} />
             </div>
             <div>
-              <label className="m-label">API Key</label>
-              <input className="m-input" type="password" value={apiKey} onChange={e => setApiKey(e.target.value)} placeholder="sk-…" style={{ fontFamily: 'var(--font-fira)', fontSize: '13px' }} />
+              <label className="m-label">{agentPlatform === 'vapi' ? 'API Key (optional — uses env key)' : 'API Key'}</label>
+              <input className="m-input" type="password" value={apiKey} onChange={e => setApiKey(e.target.value)} placeholder={agentPlatform === 'vapi' ? 'Leave empty to use server key' : 'sk-…'} style={{ fontFamily: 'var(--font-fira)', fontSize: '13px' }} />
+            </div>
+
+            {/* Platform badge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Platform</span>
+              <span style={{
+                padding: '3px 10px', borderRadius: '50px', fontSize: '12px', fontWeight: '700',
+                background: agentPlatform === 'vapi' ? 'rgba(34,197,94,0.15)' : 'rgba(74,175,247,0.15)',
+                color: agentPlatform === 'vapi' ? '#22C55E' : '#4AAFF7',
+                border: `1px solid ${agentPlatform === 'vapi' ? 'rgba(34,197,94,0.3)' : 'rgba(74,175,247,0.3)'}`,
+              }}>
+                {agentPlatform === 'vapi' ? '📞 Vapi' : '🔊 ElevenLabs'}
+              </span>
             </div>
           </div>
 
@@ -305,9 +320,10 @@ function AgentModal({ onClose, editAgent }: { onClose: () => void; editAgent: Ag
 export default function AgentsPage() {
   const router = useRouter()
   const qc = useQueryClient()
+  const { platform } = usePlatform()
   const [modalOpen, setModalOpen] = useState(false)
   const [editAgent, setEditAgent] = useState<Agent | null>(null)
-  const [menuOpen, setMenuOpen]   = useState<string | null>(null)
+  const [menuOpen, setMenuOpen] = useState<string | null>(null)
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['agents'],
@@ -326,7 +342,9 @@ export default function AgentsPage() {
     },
   })
 
-  const agents  = data?.agents || []
+  // Filter agents by selected platform
+  const allAgents = data?.agents || []
+  const agents = allAgents.filter(a => (a.platform || 'elevenlabs') === platform)
   const isAdmin = data?.role === 'admin'
 
   useEffect(() => {
@@ -549,14 +567,14 @@ export default function AgentsPage() {
               Add New Agent
             </div>
             <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', textAlign: 'center', lineHeight: 1.6 }}>
-              Connect an ElevenLabs<br />Conversational AI agent
+              Connect {platform === 'vapi' ? 'a Vapi' : 'an ElevenLabs'}<br />Conversational AI agent
             </div>
           </div>
         )}
       </div>
 
       {modalOpen && (
-        <AgentModal onClose={() => { setModalOpen(false); setEditAgent(null) }} editAgent={editAgent} />
+        <AgentModal onClose={() => { setModalOpen(false); setEditAgent(null) }} editAgent={editAgent} currentPlatform={platform} />
       )}
     </>
   )

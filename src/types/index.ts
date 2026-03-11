@@ -7,6 +7,9 @@ export interface User {
   created_at: string
 }
 
+// ── Platform ────────────────────────────────────────────
+export type Platform = 'elevenlabs' | 'vapi'
+
 // ── Agent ────────────────────────────────────────────────────
 export type AgentColor = 'peach' | 'lav' | 'mint' | 'sky' | 'rose' | 'amber'
 
@@ -17,6 +20,7 @@ export interface Agent {
   api_key?: string
   emoji: string
   color: AgentColor
+  platform: Platform
   image_url?: string
   created_by?: string
   created_at: string
@@ -34,7 +38,8 @@ export interface Conversation {
   conversation_id: string
   agent_db_id: string
   agent_el_id?: string
-  status: 'done' | 'failed' | 'processing' | 'in-progress'
+  platform?: Platform
+  status: 'done' | 'failed' | 'processing' | 'in-progress' | 'ended'
   start_time_unix: number
   duration_secs: number
   user_name?: string
@@ -46,6 +51,13 @@ export interface Conversation {
   non_kb_question_list?: string[]
   cost?: number
   llm_cost?: number
+  // Vapi-specific fields
+  end_reason?: string
+  success_evaluation?: boolean
+  recording_url?: string
+  stereo_recording_url?: string
+  cost_breakdown?: Record<string, unknown>
+  performance_metrics?: Record<string, unknown>
   synced_at: string
 }
 

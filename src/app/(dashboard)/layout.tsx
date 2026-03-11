@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import CILogo from '@/components/ui/CILogo'
+import type { Platform } from '@/types'
 
 interface Profile {
   id: string
@@ -11,6 +12,27 @@ interface Profile {
   full_name: string
   role: 'admin' | 'client'
 }
+
+// ── Platform Context ──────────────────────────────────────────
+interface PlatformContextValue {
+  platform: Platform
+  setPlatform: (p: Platform) => void
+}
+
+const PlatformContext = createContext<PlatformContextValue>({
+  platform: 'elevenlabs',
+  setPlatform: () => { },
+})
+
+export function usePlatform() {
+  return useContext(PlatformContext)
+}
+
+// ── Platform config for dropdown ──────────────────────────────
+const PLATFORMS: { value: Platform; label: string; icon: string; color: string }[] = [
+  { value: 'elevenlabs', label: 'ElevenLabs', icon: '🔊', color: '#4AAFF7' },
+  { value: 'vapi', label: 'Vapi', icon: '📞', color: '#22C55E' },
+]
 
 function initials(name: string) {
   if (!name) return '?'
@@ -23,6 +45,9 @@ function initials(name: string) {
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [profile, setProfile] = useState<Profile | null>(null)
+  const [platform, setPlatform] = useState<Platform>('elevenlabs')
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -32,15 +57,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     })
   }, [router])
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   async function handleSignOut() {
     await supabase.auth.signOut()
     window.location.href = '/login'
   }
 
   const isAdmin = profile?.role === 'admin'
+  const currentPlatform = PLATFORMS.find(p => p.value === platform) || PLATFORMS[0]
 
   return (
-    <>
+    <PlatformContext.Provider value={{ platform, setPlatform }}>
       <style>{`
         .topbar-btn {
           padding: 7px 14px;
@@ -51,6 +88,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           font-family: var(--font-nunito), sans-serif;
           transition: all 0.15s;
           white-space: nowrap;
+        }
+        .platform-dropdown-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 14px;
+          cursor: pointer;
+          transition: background 0.1s;
+          font-size: 13px;
+          font-weight: 600;
+          color: rgba(255,255,255,0.8);
+          border-radius: 6px;
+          margin: 2px 4px;
+        }
+        .platform-dropdown-item:hover {
+          background: rgba(255,255,255,0.1);
+          color: #fff;
+        }
+        .platform-dropdown-item.active {
+          background: rgba(74,175,247,0.15);
+          color: #4AAFF7;
         }
       `}</style>
 
@@ -77,25 +135,111 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }}>
 
           {/* Left: logo + wordmark */}
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
-            onClick={() => router.push('/')}
-          >
-            <CILogo size={28} />
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: '800', color: 'rgba(255,255,255,0.9)', letterSpacing: '-0.2px', lineHeight: 1.2 }}>
-                Conversation Intelligence
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+              onClick={() => router.push('/')}
+            >
+              <CILogo size={28} />
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: '800', color: 'rgba(255,255,255,0.9)', letterSpacing: '-0.2px', lineHeight: 1.2 }}>
+                  Conversation Intelligence
+                </div>
+                <div style={{ fontSize: '10px', fontWeight: '500', color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-fira)', letterSpacing: '0.02em' }}>
+                  multi-agent dashboard
+                </div>
               </div>
-              <div style={{ fontSize: '10px', fontWeight: '500', color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-fira)', letterSpacing: '0.02em' }}>
-                multi-agent dashboard
-              </div>
+            </div>
+
+            {/* ── Platform Selector Dropdown ── */}
+            <div ref={dropdownRef} style={{ position: 'relative' }}>
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: `1px solid ${dropdownOpen ? currentPlatform.color + '60' : 'rgba(255,255,255,0.12)'}`,
+                  color: currentPlatform.color,
+                  fontSize: '13px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-nunito), sans-serif',
+                  transition: 'all 0.15s',
+                }}
+                onMouseOver={e => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)'
+                  e.currentTarget.style.borderColor = currentPlatform.color + '60'
+                }}
+                onMouseOut={e => {
+                  if (!dropdownOpen) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
+                  }
+                }}
+              >
+                <span style={{ fontSize: '15px' }}>{currentPlatform.icon}</span>
+                {currentPlatform.label}
+                <span style={{
+                  fontSize: '10px',
+                  transition: 'transform 0.2s',
+                  transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  opacity: 0.6,
+                }}>▼</span>
+              </button>
+
+              {/* Dropdown menu */}
+              {dropdownOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 6px)',
+                  left: 0,
+                  minWidth: '180px',
+                  background: 'rgba(15, 27, 42, 0.98)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '10px',
+                  padding: '4px 0',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                  zIndex: 200,
+                }}>
+                  {PLATFORMS.map(p => (
+                    <div
+                      key={p.value}
+                      className={`platform-dropdown-item ${platform === p.value ? 'active' : ''}`}
+                      onClick={() => {
+                        setPlatform(p.value)
+                        setDropdownOpen(false)
+                      }}
+                      style={platform === p.value ? { color: p.color, background: p.color + '18' } : {}}
+                    >
+                      <span style={{ fontSize: '16px' }}>{p.icon}</span>
+                      <span>{p.label}</span>
+                      {platform === p.value && (
+                        <span style={{ marginLeft: 'auto', fontSize: '12px' }}>✓</span>
+                      )}
+                    </div>
+                  ))}
+                  <div style={{
+                    borderTop: '1px solid rgba(255,255,255,0.08)',
+                    margin: '4px 0',
+                    padding: '6px 14px',
+                    fontSize: '11px',
+                    color: 'rgba(255,255,255,0.3)',
+                    fontStyle: 'italic',
+                  }}>
+                    More platforms coming soon…
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Right: actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-
-
 
             {/* Admin Panel */}
             {isAdmin && (
@@ -168,6 +312,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {children}
         </main>
       </div>
-    </>
+    </PlatformContext.Provider>
   )
 }
